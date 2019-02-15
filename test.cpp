@@ -13,9 +13,10 @@ int main (int argc, char* argv[])
     amrex::Dim3 begin{10,11,12};
     amrex::Dim3 end{10+n,11+n,12+n};
 
-    amrex::Array4<double> x(vx.data(), begin, end);
-    amrex::Array4<double> y(vy.data(), begin, end);
+    amrex::Array4<double const> x(vx.data(), begin, end);
+    amrex::Array4<double      > y(vy.data(), begin, end);
     // x and y are like Fortran array with bounds (10:10+64-1,11:11+64-1,12:12+64-1)
+    // x is read-only, whereas y is both readable and writable.
     for         (int k = begin.z; k < end.z; ++k) {
         for     (int j = begin.y; j < end.y; ++j) {
             // Inform the compiler that the next loop has no assumed vector dependencies
@@ -29,4 +30,10 @@ int main (int argc, char* argv[])
     // check the min and max of the results
     std::cout << *std::min_element(vy.begin(), vy.end()) << "\n";
     std::cout << *std::max_element(vy.begin(), vy.end()) << "\n";
+
+#if defined(AMREX_DEBUG) || defined(AMREX_BOUND_CHECK)
+    // If we compile with `CFLAGS=-DAMREX_BOUND_CHECK make`
+    // the following will fail
+    std::cout << x(73, 74, 76) << "\n";
+#endif
 }
