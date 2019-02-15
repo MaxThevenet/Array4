@@ -18,6 +18,8 @@ int main (int argc, char* argv[])
     // x and y are like Fortran array with bounds (10:10+64-1,11:11+64-1,12:12+64-1)
     for         (int k = begin.z; k < end.z; ++k) {
         for     (int j = begin.y; j < end.y; ++j) {
+            // Inform the compiler that the next loop has no assumed vector dependencies
+            AMREX_PRAGMA_SIMD
             for (int i = begin.x; i < end.x; ++i) {
                 y(i,j,k) += a*x(i,j,k);
             }
