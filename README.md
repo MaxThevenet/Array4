@@ -5,8 +5,7 @@ doesn't imply read-only.
 
 It is usually constructed with
 
-    template <typename T>
-    Array4 ( T* p, Dim3 begin, Dim3 end);
+    template <typename T> Array4(T* p, Dim3 begin, Dim3 end);
     
 Here, `p` is a pointer to CPU or CUDA memory.  `Dim3` is a struct with
 three integer members, `x`, `y`, and `z`.  `Dim3 begin` and `end`
